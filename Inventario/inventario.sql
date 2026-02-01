@@ -114,9 +114,9 @@ insert into tipo_documento(codigo_td,descripccion)
 values('R','RUC');
 
 insert into proveedores(identificador,tipo_documento,nombre,telefono,correo,direccion)
-values('1792295747','C','SANTIAGO MOSQUERA','0992920306','zantycb89@gmail.com','Cumbayork');
+values('1792295747','C','Santiago Mosquera','0992920306','zantycb89@gmail.com','Cumbayork');
 insert into proveedores(identificador,tipo_documento,nombre,telefono,correo,direccion)
-values('1292288574700','R','SNACKS SA','0992920399','snacks@gmail.com','La Tola');
+values('1292288574700','R','Snacks SA','0992920399','snacks@gmail.com','La Tola');
 
 select * from tipo_documento,proveedores;
 
