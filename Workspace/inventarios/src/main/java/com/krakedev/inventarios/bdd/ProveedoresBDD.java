@@ -71,7 +71,7 @@ public class ProveedoresBDD {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new KrakeDevException("Error al consultar. Detalle: "+e.getMessage());
+			throw new KrakeDevException("Error al insertar. Detalle: "+e.getMessage());
 		}
 	}
 }
