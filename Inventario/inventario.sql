@@ -1,7 +1,7 @@
 drop table if exists categorias,categorias_unidad_medida,
 unidades_medida,producto,tipo_documento,proveedores,
 estado_pedido, cabecera_pedido,detalle_pedido,
-historial_stock,cabecera_ventas;
+historial_stock,cabecera_ventas,detalle_venta;
 create table categorias(
 	codigo_cat serial not null,
 	nombre varchar(100) not null,
@@ -92,7 +92,7 @@ select * from producto;
 
 create table tipo_documento(
 	codigo_td char(1) not null,
-	descripccion varchar(100) not null,
+	descripcion varchar(100) not null,
 	constraint codigo_td_pk primary key (codigo_td)
 );
 
@@ -108,9 +108,9 @@ create table proveedores(
 	references tipo_documento(codigo_td)
 );
 
-insert into tipo_documento(codigo_td,descripccion)
+insert into tipo_documento(codigo_td,descripcion)
 values('C','CEDULA');
-insert into tipo_documento(codigo_td,descripccion)
+insert into tipo_documento(codigo_td,descripcion)
 values('R','RUC');
 
 insert into proveedores(identificador,tipo_documento,nombre,telefono,correo,direccion)
@@ -152,8 +152,8 @@ create table detalle_pedido(
 	cabecera_pedido int not null,
 	producto int not null,
 	cantidad int not null,
-	subtotal money not null,
 	cantidad_recibida int not null,
+	subtotal money not null,
 	constraint codigo_dp_pk primary key(codigo_dp),
 	constraint cabecera_pedido_fk foreign key (cabecera_pedido)
 	references cabecera_pedido(numero_pedido),
@@ -161,10 +161,10 @@ create table detalle_pedido(
 	references producto(codigo_prod)
 );
 
-insert into detalle_pedido(cabecera_pedido,producto,cantidad,subtotal,cantidad_recibida)
-values(1,1,100,37.29,10);
-insert into detalle_pedido(cabecera_pedido,producto,cantidad,subtotal,cantidad_recibida)
-values(1,2,50,11.8,10);
+insert into detalle_pedido(cabecera_pedido,producto,cantidad,cantidad_recibida,subtotal)
+values(1,1,100,10,37.29);
+insert into detalle_pedido(cabecera_pedido,producto,cantidad,cantidad_recibida,subtotal)
+values(1,2,50,10,11.8);
 
 select * from detalle_pedido;
 
