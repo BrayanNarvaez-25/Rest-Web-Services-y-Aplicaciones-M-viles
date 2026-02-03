@@ -19,3 +19,15 @@ where prod.codigo_udm = udm.codigo_udm
 and prod.categoria = cat.codigo_cat
 
 select * from producto
+
+select * from cabecera_pedido
+select * from detalle_pedido
+
+update cabecera_pedido 
+set estado = 'R' where numero_pedido = 1
+
+update detalle_pedido
+set cantidad_recibida = 30, subtotal = 20
+where codigo_dp = 4
+
+select * from historial_stock
