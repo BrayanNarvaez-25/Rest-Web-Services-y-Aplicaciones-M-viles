@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -72,9 +73,14 @@ public class PedidosBDD {
 		Connection con = null;
 		PreparedStatement ps = null;
 		PreparedStatement psDet = null;
+		PreparedStatement psHis = null;
+		
+		Date fechaActual = new Date();
+		Timestamp fechaHoraActual = new Timestamp (fechaActual.getTime());
 		
 		try {
 			con = ConexionBDD.obtenerConexion();
+			con.setAutoCommit(false);
 			ps = con.prepareStatement("update cabecera_pedido "
 					+ "set estado = ? where numero_pedido = ?");
 			ps.setString(1, "R");
@@ -97,7 +103,18 @@ public class PedidosBDD {
 				psDet.setInt(3, det.getCodigo());
 				
 				psDet.executeUpdate();
+				
+				psHis = con.prepareStatement("insert into historial_stock(fecha,referencia,producto,cantidad)"
+					+ "values(?,?,?,? )");
+				psHis.setTimestamp(1, fechaHoraActual);
+				psHis.setString(2, "Pedido "+ pedido.getCodigo());
+				psHis.setInt(3, det.getProducto().getCodigo());
+				psHis.setInt(4, det.getCantidadRecibida());
+			
+				psHis.executeUpdate();
 			}
+			
+			con.commit();
 			
 		}catch (KrakeDevException e) {
 			e.printStackTrace();
@@ -106,6 +123,15 @@ public class PedidosBDD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new KrakeDevException("Error al insertar. Detalle: "+e.getMessage());
+		}catch (Exception e) {
+		    try {
+		        if (con != null) {
+		            con.rollback();
+		        }
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    }
+		    throw e;
 		}
 	}
 }
