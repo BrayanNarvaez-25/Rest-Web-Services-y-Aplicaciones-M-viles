@@ -21,7 +21,7 @@ public class ProveedoresBDD {
 		try {
 			con = ConexionBDD.obtenerConexion();
 			ps = con.prepareStatement(
-					"select prov.identificador,prov.tipo_documento,td.descripccion,prov.nombre,prov.telefono,prov.correo,prov.direccion "
+					"select prov.identificador,prov.tipo_documento,td.descripcion,prov.nombre,prov.telefono,prov.correo,prov.direccion "
 							+ "from proveedores prov, tipo_documento td " + "where prov.tipo_documento = td.codigo_td "
 							+ "and upper(nombre) like ?");
 			ps.setString(1, "%" + subcadena.toUpperCase() + "%");
@@ -30,7 +30,7 @@ public class ProveedoresBDD {
 			while (rs.next()) {
 				String identificador = rs.getString("identificador");
 				String codigoTipoDocumento = rs.getString("tipo_documento");
-				String descripcionTipoDocumento = rs.getString("descripccion");
+				String descripcionTipoDocumento = rs.getString("descripcion");
 				String nombre = rs.getString("nombre");
 				String telefono = rs.getString("telefono");
 				String correo = rs.getString("correo");

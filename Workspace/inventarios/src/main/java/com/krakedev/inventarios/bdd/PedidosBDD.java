@@ -11,7 +11,10 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.krakedev.inventarios.entidades.DetallePedido;
+import com.krakedev.inventarios.entidades.EstadoPedido;
 import com.krakedev.inventarios.entidades.Pedido;
+import com.krakedev.inventarios.entidades.Proveedor;
+import com.krakedev.inventarios.entidades.TipoDocumento;
 import com.krakedev.inventarios.excepciones.KrakeDevException;
 import com.krakedev.inventarios.utils.ConexionBDD;
 
@@ -133,5 +136,58 @@ public class PedidosBDD {
 		    }
 		    throw e;
 		}
+	}
+	
+	public ArrayList<Pedido> buscar(String subcadena) throws KrakeDevException {
+		ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
+		ArrayList<Proveedor> proveedores = new ArrayList<Proveedor>();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Pedido pedido = null;
+		Proveedor proveedor = null;
+		Date fechaActual = new Date();
+		try {
+			con = ConexionBDD.obtenerConexion();
+			ps = con.prepareStatement(
+					"select cp.numero_pedido, prov.nombre,cp.fecha,cp.estado, "
+					+ "dp.codigo_dp, dp.cabecera_pedido, dp.producto, dp.cantidad, "
+					+ "dp.cantidad_recibida,dp.subtotal,prov.identificador,prov.tipo_documento, "
+					+ "td.descripcion,prov.nombre,prov.telefono, "
+					+ "prov.correo,prov.direccion "
+					+ "from proveedores prov, tipo_documento td, "
+					+ "cabecera_pedido cp, detalle_pedido dp "
+					+ "where prov.tipo_documento = td.codigo_td "
+					+ "and upper(nombre) like ?");
+			ps.setString(1, "%" + subcadena.toUpperCase() + "%");
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				String identificador = rs.getString("identificador");
+				String codigoTipoDocumento = rs.getString("tipo_documento");
+				String descripcionTipoDocumento = rs.getString("descripcion");
+				String nombre = rs.getString("nombre");
+				String telefono = rs.getString("telefono");
+				String correo = rs.getString("correo");
+				String direccion = rs.getString("direccion");
+				int numeroPedido = rs.getInt("numero_pedido");
+				String estadoPedido = rs.getString("estado");
+				TipoDocumento td = new TipoDocumento(codigoTipoDocumento, descripcionTipoDocumento);
+				proveedor = new Proveedor(identificador, td, nombre, telefono, correo, direccion);
+				proveedores.add(proveedor);
+				EstadoPedido ep = new EstadoPedido(estadoPedido,"");
+				pedido = new Pedido(numeroPedido,proveedor,fechaActual,ep);
+				
+				pedidos.add(pedido);
+			}
+		} catch (KrakeDevException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new KrakeDevException("Error al consultar. Detalle: " + e.getMessage());
+		}
+		return pedidos;
 	}
 }

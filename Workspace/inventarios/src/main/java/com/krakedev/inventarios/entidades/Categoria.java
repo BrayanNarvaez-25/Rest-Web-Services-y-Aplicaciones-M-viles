@@ -1,9 +1,12 @@
 package com.krakedev.inventarios.entidades;
 
+import java.util.ArrayList;
+
 public class Categoria {
 	private int codigo;
 	private String nombre;
 	private Categoria categoriaPadre;
+	private ArrayList<Categoria> listaCat;
 	
 	public Categoria() {}
 
@@ -42,6 +45,18 @@ public class Categoria {
 
 	public void setCategoriaPadre(Categoria categoriaPadre) {
 		this.categoriaPadre = categoriaPadre;
+	}
+
+
+
+	public ArrayList<Categoria> getListaCat() {
+		return listaCat;
+	}
+
+
+
+	public void setListaCat(ArrayList<Categoria> listaCat) {
+		this.listaCat = listaCat;
 	}
 
 

@@ -2,22 +2,22 @@ package com.krakedev.inventarios.entidades;
 
 public class EstadoPedido {
 	
-	private int codigo;
+	private String codigo;
 	private String descripcion;
 	
 	public EstadoPedido() {}
 
-	public EstadoPedido(int codigo, String descripcion) {
+	public EstadoPedido(String codigo, String descripcion) {
 		super();
 		this.codigo = codigo;
 		this.descripcion = descripcion;
 	}
 
-	public int getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 

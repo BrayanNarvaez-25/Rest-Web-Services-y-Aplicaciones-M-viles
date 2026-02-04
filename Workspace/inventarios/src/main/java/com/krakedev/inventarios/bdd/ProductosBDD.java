@@ -5,9 +5,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.krakedev.inventarios.entidades.Categoria;
+import com.krakedev.inventarios.entidades.DetallePedido;
+import com.krakedev.inventarios.entidades.Pedido;
 import com.krakedev.inventarios.entidades.Productos;
 import com.krakedev.inventarios.entidades.Proveedor;
 import com.krakedev.inventarios.entidades.UnidadesMedida;
@@ -102,6 +106,49 @@ public class ProductosBDD {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new KrakeDevException("Error al insertar. Detalle: "+e.getMessage());
+		}
+	}
+	
+	public void actualizar(Productos producto) throws KrakeDevException{
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		try {
+			con = ConexionBDD.obtenerConexion();
+			con.setAutoCommit(false);
+			ps = con.prepareStatement("update producto "
+					+ "set nombre = ?, codigo_udm = ?, "
+					+ "precio_venta = ?, tiene_iva = ?, coste = ?, "
+					+ "categoria = ?, stock = ? "
+					+ "where codigo_prod = ?");
+			ps.setString(1, producto.getNombre());
+			ps.setString(2, producto.getUnidadMedida().getCodigo());
+			ps.setBigDecimal(3, producto.getPrecioVenta());
+			ps.setBoolean(4, producto.isTieneIva());
+			ps.setBigDecimal(5, producto.getCoste());
+			ps.setInt(6, producto.getCategoria().getCodigo());
+			ps.setInt(7, producto.getStock());
+			ps.setInt(8, producto.getCodigo());
+			ps.executeUpdate();
+			
+			con.commit();
+			
+		}catch (KrakeDevException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new KrakeDevException("Error al actualizar. Detalle: "+e.getMessage());
+		}catch (Exception e) {
+		    try {
+		        if (con != null) {
+		            con.rollback();
+		        }
+		    } catch (SQLException ex) {
+		        ex.printStackTrace();
+		    }
+		    throw e;
 		}
 	}
 }
