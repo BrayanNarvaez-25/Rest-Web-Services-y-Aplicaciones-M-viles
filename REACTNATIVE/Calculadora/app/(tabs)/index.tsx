@@ -14,22 +14,22 @@ export default function HomeScreen() {
   const [resultado, setResultado] = useState(0);
 
   const sumar = () =>{
-    let suma = parseFloat(num1) + parseInt(num2);
+    let suma = parseFloat(num1) + parseFloat(num2);
     setResultado(suma);
   }
 
   const restar = () =>{
-    let resta = parseFloat(num1) - parseInt(num2);
+    let resta = parseFloat(num1) - parseFloat(num2);
     setResultado(resta)
   }
 
   const multiplicar = () =>{
-    let mmultiplicacion = parseFloat(num1) * parseInt(num2);
+    let mmultiplicacion = parseFloat(num1) * parseFloat(num2);
     setResultado(mmultiplicacion);
   }
 
   const dividir = () => {
-    let division = parseFloat(num1) / parseInt(num2);
+    let division = parseFloat(num1) / parseFloat(num2);
     setResultado(division);
   }
 
@@ -49,6 +49,7 @@ export default function HomeScreen() {
         <TextInput
           style={styles.cajaTexto}
           value={num1} 
+          keyboardType='numeric'
           onChangeText={(txt) => {
             setNum1(txt)
           }}
@@ -56,6 +57,7 @@ export default function HomeScreen() {
         <TextInput
           value={num2}
           style={styles.cajaTexto}
+          keyboardType='numeric'
           onChangeText={(txt) => {
             setNum2(txt)
           }}

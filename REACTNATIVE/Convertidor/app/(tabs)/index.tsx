@@ -39,6 +39,8 @@ export default function HomeScreen() {
         <TextInput
         style={styles.cajaTexto}
         value={dolar}
+        placeholder='Ingrese los dólares a convertir'
+        keyboardType='numeric'
         onChangeText={(txt) =>{
           setDolar(txt);
         }}
