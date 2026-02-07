@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10
   },
   caja: {
-    borderColor: "green",
+    borderColor: "black",
     borderWidth: 1,
     paddingTop: 5,
     paddingHorizontal: 10,
