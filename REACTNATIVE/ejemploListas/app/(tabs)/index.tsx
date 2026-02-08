@@ -65,33 +65,33 @@ export default function HomeScreen() {
     return false;
   }
 
-  let ItemPersona = (props: ItemPersonaProps) => {
+  let ItemPersona = ({indice,persona}: ItemPersonaProps) => {
     return (
       <View style={styles.itemPersona}>
         <View style={styles.containerIdx}>
-          <Text style={styles.textoPrincipal}> {props.indice}</Text>
+          <Text style={styles.textoPrincipal}> {indice}</Text>
         </View>
         <View style={styles.containerData}>
-          <Text style={styles.textoPrincipal}> {props.persona.nombre} {props.persona.apellido} </Text>
-          <Text style={styles.textoSecunario}> {props.persona.cedula}</Text>
+          <Text style={styles.textoPrincipal}> {persona.nombre} {persona.apellido} </Text>
+          <Text style={styles.textoSecunario}> {persona.cedula}</Text>
         </View>
         <View style={styles.containerBotones}>
           <Button
             title=' E '
             color="green"
             onPress={() => {
-              setTxtCedula(props.persona.cedula);
-              setTxtNombre(props.persona.nombre);
-              setTxtApellido(props.persona.apellido);
+              setTxtCedula(persona.cedula);
+              setTxtNombre(persona.nombre);
+              setTxtApellido(persona.apellido);
               esNuevo = false;
-              indiceSelecionado = props.indice
+              indiceSelecionado = indice
             }}
           />
           <Button
             title=' X '
             color="red"
             onPress={() => {
-              indiceSelecionado = props.indice;
+              indiceSelecionado = indice;
               listaPersonas.splice(indiceSelecionado, 1);
               console.log("Arreglo personas: " + listaPersonas)
               setNumElementos(listaPersonas.length)
@@ -146,14 +146,12 @@ export default function HomeScreen() {
         <FlatList
           style={styles.lista}
           data={listaPersonas}
-          renderItem={(elemento) => {
-            return <ItemPersona indice={elemento.index}
-              persona={elemento.item}
-            />
+          renderItem={({index,item}) => {
+            return (
+              <ItemPersona indice={index} persona={item} />
+            );
           }}
-          keyExtractor={(item) => {
-            return item.cedula
-          }}
+          keyExtractor={item => item.cedula}
         />
       </View>
       <View style={styles.containerPie}>

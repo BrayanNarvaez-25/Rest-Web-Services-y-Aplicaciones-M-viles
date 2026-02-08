@@ -1,4 +1,4 @@
-import { StyleSheet, Button, View, TextInput, Text, FlatList, Alert, ScrollView } from 'react-native';
+import { StyleSheet, Button, View, TextInput, Text, FlatList, Alert, ScrollView, TouchableOpacity, Modal } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 
@@ -33,6 +33,8 @@ export default function HomeScreen() {
   const [esNuevo, setEsNuevo] = useState(true);
   const [indiceSelecionado, setIndiceSelecionado] = useState<number | null>(null);
   const scrollRef = useRef<ScrollView>(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [indiceAEliminar, setIndiceAEliminar] = useState<number | null>(null);
 
 
 
@@ -114,43 +116,41 @@ export default function HomeScreen() {
     return false;
   };
 
-  let ItemProducto = (props: itemProductoProps) => {
+  let ItemProducto = ({ index, producto }: itemProductoProps) => {
     return (
       <View style={styles.itemPersona}>
         <View style={styles.containerIdx}>
-          <Text style={styles.textoPrincipal}> {props.index}</Text>
+          <Text style={styles.textoPrincipal}> {index}</Text>
         </View>
         <View style={styles.containerData}>
-          <Text style={styles.textoPrincipal}> {props.producto.nombre} </Text>
-          <Text style={styles.textoSecunario}> {props.producto.categoria}</Text>
+          <Text style={styles.textoPrincipal}> {producto.nombre} </Text>
+          <Text style={styles.textoSecunario}> {producto.categoria}</Text>
         </View>
         <View style={styles.containerPrecio}>
-          <Text style={styles.textoPrincipal}> {props.producto.precioVenta}</Text>
+          <Text style={styles.textoPrincipal}> {producto.precioVenta}</Text>
         </View>
         <View style={styles.containerBotones}>
-          <Button
-            title=' E '
-            color="green"
+          <TouchableOpacity style={styles.buttonE}
             onPress={() => {
-              setCodigo(props.producto.id);
-              setNombre(props.producto.nombre);
-              setCategoria(props.producto.categoria);
-              setprecioCompra(props.producto.precioCompra)
+              setCodigo(producto.id);
+              setNombre(producto.nombre);
+              setCategoria(producto.categoria);
+              setprecioCompra(producto.precioCompra)
               setEsNuevo(false)
-              let indice = parseInt(props.producto.id)
+              let indice = parseInt(producto.id)
               setIndiceSelecionado(indice);
             }}
-          />
-          <Button
-            title=' X '
-            color="red"
+          >
+            <Text style={styles.buttonLetra}> E </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonX}
             onPress={() => {
-              setListaProductos(
-                listaProductos.filter((_, i) => i !== props.index)
-              );
-
+              setIndiceAEliminar(index)
+              setModalVisible(true)
             }}
-          />
+          >
+            <Text style={styles.buttonLetra}> X </Text>
+          </TouchableOpacity >
         </View>
       </View>
     )
@@ -243,14 +243,51 @@ export default function HomeScreen() {
             return <ItemProducto index={index} producto={item} />
           }}
 
-          keyExtractor={(item) => {
-            return item.id
-          }}
+          keyExtractor={item => item.id}
         />
       </View>
       <View style={styles.containerPie}>
-        <Text>Autor: Brayan Narváez</Text>
+        <Text style={styles.textoSecunario}>Autor: Brayan Narváez</Text>
       </View>
+      <Modal
+        transparent animationType="fade"
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+
+            <Text style={styles.modalText}>
+              ¿Está seguro que quiere eliminar?
+            </Text>
+
+            <View style={styles.modalButtons}>
+              <Button
+                title="Cancelar"
+                color="red"
+                onPress={() => {
+                  setModalVisible(false);
+                  setIndiceAEliminar(null);
+                }}
+              />
+              <Button
+                title="Aceptar"
+                color="green"
+                onPress={() => {
+                  if (indiceAEliminar !== null) {
+                    setListaProductos(
+                      listaProductos.filter((_, i) => i !== indiceAEliminar)
+                    );
+                  }
+                  setModalVisible(false);
+                  setIndiceAEliminar(null);
+                }}
+              />
+            </View>
+
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -369,5 +406,43 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     zIndex: 10,
   },
+  buttonE: {
+    alignItems: 'center',
+    backgroundColor: 'green',
+    padding: 10,
+  },
+  buttonX: {
+    alignItems: 'center',
+    backgroundColor: 'red',
+    padding: 10,
+  },
+  buttonLetra: {
+    color: "white"
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalBox: {
+    width: "80%",
+    backgroundColor: "black",
+    padding: 20,
+    borderRadius: 10,
+  },
+
+  modalText: {
+    fontSize: 18,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "green",
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
 
 });
