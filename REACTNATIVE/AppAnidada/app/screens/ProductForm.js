@@ -4,128 +4,95 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button, Input } from "@rneui/themed";
 import { Entypo, AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
-import { saveProduct, updateProduct } from "../services/ProductService";
+import { saveGrade, updateGrade } from "../services/ProductService";
 
 export default function ProductForm({ navigation, route }) {
-  //---------- Refresh List ----------
-  const refreshList = route.params.refreshList;
   //---------- Detectar si es nuevo ----------
   let isNew = true;
-  let idR, nameR, categoryR, priceR;
+  let subjetR;
+  let gradeR;
 
-  if (route.params.product != null) {
+  if (route.params.notita != null) {
     isNew = false;
-    idR = route.params.product.id.toString();
-    nameR = route.params.product.name;
-    categoryR = route.params.product.category;
-    priceR = route.params.product.price.toString();
+  }
+
+  if (!isNew) {
+    subjetR = route.params.notita.subjet;
+    gradeR = route.params.notita.grade.toString();;
   }
 
   //---------- UseState ----------
-  const [id, setid] = useState(idR || "");
-  const [name, setname] = useState(nameR || "");
-  const [category, setcategory] = useState(categoryR || "");
-  const [price, setprice] = useState(priceR || "");
-
-  //Errores
-  const [errorId, seterrorId] = useState("");
-  const [errorName, seterrorName] = useState("");
-  const [errorCategory, seterrorCategory] = useState("");
-  const [errorPrice, seterrorPrice] = useState("");
+  const [subjet, setSubjet] = useState(subjetR);
+  const [grade, setGrade] = useState(gradeR);
+  const [errorSubjet, setErrorSubetj] = useState();
+  const [errorGrade, setErrorGrade] = useState();
   let hasError = false;
+
 
   //---------- Guardar el objeto ----------
   const save = () => {
-    // Limpiar errores
-    seterrorId(null);
-    seterrorName(null);
-    seterrorCategory(null);
-    seterrorPrice(null);
+    setErrorGrade(null);
+    setErrorSubetj(null);
     validate();
 
     if (!hasError) {
-      const product = {
-        id: parseInt(id),
-        name,
-        category,
-        price: parseFloat(price),
-      };
-
       if (isNew) {
-        saveProduct(product);
+        saveGrade({ subjet: subjet, grade: grade });
       } else {
-        updateProduct(product);
+        updateGrade({ subjet: subjet, grade: grade })
       }
-
-      // Refrescar la lista y volver
-      refreshList?.();
       navigation.goBack();
-    }
+      route.params.fnRefresh();
+    };
   };
 
   //---------- Validaciones -----------
   const validate = () => {
-    if (id == null || id == "" || isNaN(id)) {
-      seterrorId("Debe ingresar un ID numerico");
+    if (subjet == null || subjet == "") {
+      setErrorSubetj("Debe ingresar una materia");
       hasError = true;
-    }
-    if (name == null || name == "") {
-      seterrorName("Debe ingresar un nombre");
+    };
+    let gradeFloat = parseFloat(grade);
+    if (grade == null || isNaN(gradeFloat) || gradeFloat < 0 || gradeFloat > 10) {
+      setErrorGrade("Debe ingresar una nota entre 0 y 10");
       hasError = true;
-    }
-    if (category == null || category == "") {
-      seterrorCategory("Debe ingresar una categoria");
-      hasError = true;
-    }
-    if (price == null || price == "" || isNaN(price) || price < 0) {
-      seterrorPrice("Debe ingresar un precio numerico y valido");
-      hasError = true;
-    }
+    };
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ingresa un Producto</Text>
+      <Text style={styles.title}>Ingresa una Materia y su Nota</Text>
       <Input
-        value={id}
-        placeholder="Ingrese un numero"
-        label="ID:"
-        keyboardType="numeric"
-        onChangeText={setid}
-        errorMessage={errorId}
+        value={subjet}
+        onChangeText={setSubjet}
+        placeholder='Ejemplo: Matemáticas'
+        placeholderTextColor="green"
+        label="Materia"
+        labelStyle={{color:"green"}}
+        inputContainerStyle={{borderBottomColor:"green"}}
+        inputStyle={{ color: "green" }} 
+        errorMessage={errorSubjet}
         disabled={!isNew}
       />
       <Input
-        placeholder="Ejemplo: Pepsi"
-        label="Nombre:"
-        value={name}
-        onChangeText={setname}
-        errorMessage={errorName}
-      />
-      <Input
-        placeholder="Ejemplo: Bebida"
-        label="Categoria:"
-        value={category}
-        onChangeText={setcategory}
-        errorMessage={errorCategory}
-      />
-      <Input
-        placeholder="Ingrese un numero"
-        label="Precio:"
-        keyboardType="numeric"
-        value={price}
-        onChangeText={setprice}
-        errorMessage={errorPrice}
+        value={grade}
+        onChangeText={setGrade}
+        placeholder='0 - 10'
+        placeholderTextColor="green"
+        label="Nota"
+        labelStyle={{color:"green"}}
+        inputContainerStyle={{borderBottomColor:"green"}}
+        inputStyle={{ color: "green" }} 
+        errorMessage={errorGrade}
+        keyboardType='numeric'
       />
       <Button
         title="Guardar"
-        icon={<Entypo name="save" size={16} color="#fff" marginRight={5} />}
+        titleStyle={{color: "black", fontWeight: "bold"}}
+        icon={<Entypo name="save" size={16} color="black" marginRight={5} />}
         buttonStyle={styles.loginButton}
         onPress={save}
       />
-      <Text style={styles.title}>
-        {name} {category}
-      </Text>
       <StatusBar style="auto" />
     </View>
   );
@@ -134,12 +101,12 @@ export default function ProductForm({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
   },
   loginButton: {
-    backgroundColor: "#00a680",
+    backgroundColor: "green",
     borderRadius: 5,
   },
   title: {
@@ -148,5 +115,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     alignSelf: "center",
+    color:"green"
   },
 });

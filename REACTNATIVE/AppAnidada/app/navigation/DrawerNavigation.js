@@ -9,9 +9,20 @@ const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigation({ navigation }) {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+      screenOptions={{
+        headerStyle: {backgroundColor: "black"},
+        headerTintColor:"green",
+        drawerStyle:{backgroundColor: "black"},
+        drawerLabelStyle:{color:"green"},
+        drawerActiveBackgroundColor: "green",
+        drawerActiveTintColor: "black",
+        drawerInactiveTintColor:"gray"
+      }}
+    >
       <Drawer.Screen
-        name="Productos"
+        
+        name="Lista de Notas"
         component={StackNavigation}
         options={{
           drawerIcon: ({ color, size }) => (

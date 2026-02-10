@@ -7,10 +7,11 @@ import { Entypo } from "@expo/vector-icons";
 export default function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Bienvenido a la App de Productos</Text>
+      <Text style={styles.title}>Bienvenido a la App de Notas</Text>
       <Button
         title="Iniciar Sesion"
-        icon={<Entypo name="login" size={16} color="#fff" marginRight={5} />}
+        titleStyle={{color:"black"}}
+        icon={<Entypo name="login" size={16} color="black" marginRight={5} />}
         buttonStyle={styles.loginButton}
         onPress={() => navigation.replace("Drawer")} 
       />
@@ -22,12 +23,12 @@ export default function HomeScreen({navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
   },
   loginButton: {
-    backgroundColor: '#00a680',
+    backgroundColor: 'green',
     borderRadius: 5,
   },
   title: {
@@ -36,5 +37,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     alignSelf: 'center',
+    color: "green"
   },
 });

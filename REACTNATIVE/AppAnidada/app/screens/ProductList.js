@@ -7,62 +7,70 @@ import {
   FlatList,
   TouchableHighlight,
 } from "react-native";
-import { getProducts } from "../services/ProductService";
-import { ListItem, Avatar, FAB } from "@rneui/themed";
+import { getGrades } from "../services/ProductService";
+import { ListItem, Avatar, FAB } from "@rneui/base";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 
 export default function ProductList({ navigation }) {
   //Traer los productos
-  const products = getProducts();
+  const grades = getGrades();
 
   //Refrescar la Pantalla para ver los cambios
-  const [refreshTime, setRefreshTime] = useState();
+  const [time, setTime] = useState();
 
-  const refresh = () => setRefreshTime(new Date().getTime());
+  const refreshList = () => {
+    setTime(new Date().getTime());
+  }
 
   //PROPS
-  const ItemProduct = ({ product }) => {
+  const ItemGrade = ({ nota }) => {
     return (
-      <TouchableHighlight onPress={() => navigation.navigate("ProductForm", { product, refreshList: refresh })}>
-        <ListItem bottomDivider>
+      <TouchableHighlight onPress={() => {
+        navigation.navigate("ProductForm", { notita: nota, fnRefresh: refreshList });
+      }}>
+        <ListItem bottomDivider
+          containerStyle={{backgroundColor:"black", borderBottomColor: "green", borderBottomWidth: 1}}
+          
+        >
           <Avatar
-            size={32}
+            title={nota.subjet.substring(0, 1)}
+            titleStyle={{color:"black"}}
+            containerStyle={{ backgroundColor: "green" }}
             rounded
-            title={product.id}
-            containerStyle={{ backgroundColor: "#00a680" }}
           />
           <ListItem.Content>
-            <ListItem.Title>{product.name}</ListItem.Title>
-            <ListItem.Subtitle>{product.category}</ListItem.Subtitle>
+            <ListItem.Title style={{color:"green"}}> {nota.subjet} </ListItem.Title>
           </ListItem.Content>
           <ListItem.Content>
-            <ListItem.Subtitle>$ {product.price}</ListItem.Subtitle>
+            <ListItem.Title style={{color:"green"}}> {nota.grade} </ListItem.Title>
           </ListItem.Content>
-          <Entypo name="chevron-right" size={20} color="#999" />
+          <ListItem.Chevron color="green"/>
         </ListItem>
       </TouchableHighlight>
-    );
-  };
+    )
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Productos</Text>
+      <Text style={styles.title}>Notas</Text>
       <FlatList
-        data={products}
+        data={getGrades()}
         renderItem={({ item }) => {
-          return <ItemProduct product={item} />;
+          return (
+            <ItemGrade nota={item} />
+          )
         }}
-        keyExtractor={(item) => item.id}
-        extraData={refreshTime}
+        keyExtractor={(item) => { return item.subjet }}
       />
       <FAB
         title="+"
         //Posicion:
+        titleStyle={{color:"black"}}
         placement="right"
-        color="#00a680"
+        color="green"
         onPress={() => {
-          navigation.navigate("ProductForm", { refreshList: refresh });
+          navigation.navigate("ProductForm", { notita: null,fnRefresh:refreshList });
         }}
       />
       <StatusBar style="auto" />
@@ -73,7 +81,7 @@ export default function ProductList({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "black",
   },
   title: {
     fontSize: 20,
@@ -81,5 +89,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     alignSelf: "center",
+    color:"green"
   },
 });

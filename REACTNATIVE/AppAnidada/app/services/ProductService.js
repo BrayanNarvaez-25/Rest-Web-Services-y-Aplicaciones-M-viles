@@ -1,31 +1,34 @@
-let products = [
-  { id: 1, name: "Coca Cola", price: 1.5, category: "Bebidas" },
-  { id: 2, name: "Doritos", price: 0.5, category: "Snacks" },
-  { id: 3, name: "Cerveza", price: 2.25, category: "Bebidas" },
+let grades = [
+    {subjet: "Matemáticas",grade:9.5},
+    {subjet: "Física",grade:9.2}
 ];
 
 //Funcion para obtener todos
-export const getProducts = () => {
-  return products;
-};
+export const getGrades = () =>{
+    return grades;
+}
 
 //Funcion para guardar
-export const saveProduct = (product) => {
-  products.push(product);
-  console.log(products);
-};
+export const saveGrade = (grade) =>{
+    grades.push(grade);
+    console.log("Arreglo",grades)
+}
 
 //Buscar un producto
-const findProduct = (id) => {
-  return products.find((p) => p.id === id);
-};
+const find = (subjet) =>{
+    for(let i = 0;i < grades.length; i++){
+        if(grades[i].subjet == subjet){
+            return grades[i];
+        }
+    }
+    return null;
+}
 
 //Actualizar producto
-export const updateProduct = (product) => {
-  const found = findProduct(product.id);
-  if (found) {
-    found.name = product.name;
-    found.price = product.price;
-    found.category = product.category;
-  }
-};
+export const updateGrade = (nota) =>{
+    let gradeRetrived = find(nota.subjet);
+    if(gradeRetrived!=null){
+        gradeRetrived.grade =nota.grade;
+    }
+    console.log(grades)
+}

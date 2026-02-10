@@ -8,9 +8,11 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigation() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
+    <Tab.Navigator screenOptions={{ headerShown: false, tabBarStyle:{backgroundColor: "black",borderTopColor:"green"},
+      tabBarActiveTintColor:"green", tabBarInactiveTintColor:"gray"
+    }}>
       <Tab.Screen
-        name="Productos"
+        name="Lista de Notas"
         component={ProductList}
         options={{
           tabBarIcon: ({ color, size }) => (
